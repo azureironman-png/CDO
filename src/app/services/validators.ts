@@ -27,11 +27,12 @@ export function taxIdValidator(): ValidatorFn {
     if (!value) {
       return null;
     }
-    // Accept masked demo values and simple SSN/EIN-like patterns.
+    // Accept masked demo values, SSN/EIN-like patterns, and plain numeric tax IDs.
     const ok =
       /^\*{3}-\*{2}-\d{4}$/.test(value) ||
       /^\d{3}-\d{2}-\d{4}$/.test(value) ||
       /^\d{2}-\d{7}$/.test(value) ||
+      /^\d{9}$/.test(value) ||
       /^[A-Z0-9-]{5,20}$/i.test(value);
     return ok ? null : { taxId: true };
   };

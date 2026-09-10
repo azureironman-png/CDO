@@ -1,15 +1,14 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CustomerEtlService } from '../../services/customer-etl.service';
-import { Customer, CustomerSummary } from '../../models/customer.model';
+import { CustomerSummary } from '../../models/customer.model';
 
 @Component({
   selector: 'cdo-customer-summary',
@@ -17,12 +16,10 @@ import { Customer, CustomerSummary } from '../../models/customer.model';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterLink,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatChipsModule,
     MatProgressSpinnerModule
   ],
   templateUrl: './customer-summary.component.html',
@@ -36,14 +33,18 @@ export class CustomerSummaryComponent implements OnInit {
   readonly loading = signal(false);
   readonly searching = signal(false);
   readonly summaries = signal<CustomerSummary[]>([]);
-  readonly match = signal<Customer | null>(null);
   readonly error = signal<string | null>(null);
+  readonly panelOpen = signal(true);
 
   readonly searchForm = this.fb.nonNullable.group({
-    query: ['', [Validators.required, Validators.minLength(3)]]
+    query: ['']
   });
 
   ngOnInit(): void {
+    this.loadAll();
+  }
+
+  loadAll(): void {
     this.loading.set(true);
     this.etl.listSummaries().subscribe({
       next: (rows) => {
@@ -58,19 +59,24 @@ export class CustomerSummaryComponent implements OnInit {
   }
 
   search(): void {
-    if (this.searchForm.invalid) {
-      this.searchForm.markAllAsTouched();
+    const q = this.searchForm.controls.query.value.trim();
+    if (!q) {
+      this.loadAll();
       return;
     }
     this.searching.set(true);
     this.error.set(null);
-    this.etl.searchById(this.searchForm.controls.query.value).subscribe({
+    this.etl.searchById(q).subscribe({
       next: (customer) => {
-        this.match.set(customer);
         this.searching.set(false);
         if (!customer) {
-          this.error.set('No customer found for that ID or name.');
+          this.summaries.set([]);
+          this.error.set('No customer found for that MDM ID or name.');
+          return;
         }
+        this.etl.listSummaries().subscribe((rows) => {
+          this.summaries.set(rows.filter((r) => r.id === customer.id));
+        });
       },
       error: () => {
         this.searching.set(false);
@@ -82,5 +88,9 @@ export class CustomerSummaryComponent implements OnInit {
   openCustomer(id: string): void {
     this.etl.selectCustomer(id);
     void this.router.navigate(['/customers', id, 'account']);
+  }
+
+  togglePanel(): void {
+    this.panelOpen.update((v) => !v);
   }
 }

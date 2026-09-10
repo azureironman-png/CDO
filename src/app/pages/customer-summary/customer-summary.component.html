@@ -1,71 +1,68 @@
-<section class="panel">
-  <div class="panel__intro">
-    <h2>Customer Summary</h2>
-    <p>Search by customer UUID or name, then open the party record for MDM edits.</p>
-  </div>
-
-  <form class="search" [formGroup]="searchForm" (ngSubmit)="search()">
-    <mat-form-field appearance="outline" class="search__field">
-      <mat-label>Customer ID or name</mat-label>
-      <input matInput formControlName="query" placeholder="e.g. 00000000-0000-4000-8000-custo0000001" />
-      <mat-icon matSuffix>fingerprint</mat-icon>
-      @if (searchForm.controls.query.hasError('required')) {
-        <mat-error>Query is required</mat-error>
-      } @else if (searchForm.controls.query.hasError('minlength')) {
-        <mat-error>Enter at least 3 characters</mat-error>
-      }
-    </mat-form-field>
-    <button mat-flat-button color="primary" type="submit" [disabled]="searching()">
-      @if (searching()) {
-        <mat-spinner diameter="18"></mat-spinner>
-      } @else {
-        Search
-      }
-    </button>
+<section class="cde-page">
+  <form class="search-bar" [formGroup]="searchForm" (ngSubmit)="search()">
+    <label for="mdm-query">Search MDM ID / Name</label>
+    <input id="mdm-query" formControlName="query" placeholder="e.g. 200142074959 or SMITH" />
+    <button type="submit" [disabled]="searching()">Search</button>
+    <button type="button" class="secondary" (click)="loadAll()">Reset</button>
   </form>
 
   @if (error()) {
-    <p class="banner banner--warn">{{ error() }}</p>
+    <p class="banner">{{ error() }}</p>
   }
 
-  @if (match(); as customer) {
-    <article class="result" (click)="openCustomer(customer.id)" (keyup.enter)="openCustomer(customer.id)" tabindex="0" role="button">
-      <div>
-        <h3>{{ customer.first_name }} {{ customer.last_name }}</h3>
-        <p class="mono">{{ customer.id }}</p>
-      </div>
-      <mat-chip-set>
-        <mat-chip>{{ customer.party_lifecycle_status }}</mat-chip>
-      </mat-chip-set>
-    </article>
-  }
+  <div class="results-panel">
+    <button type="button" class="results-panel__head" (click)="togglePanel()">
+      <span>PERSON - CUSTOMER SEARCH RESULTS</span>
+      <mat-icon>{{ panelOpen() ? 'expand_more' : 'chevron_right' }}</mat-icon>
+    </button>
 
-  <div class="list-head">
-    <h3>Recent parties</h3>
-    <a routerLink="/customers/new">Create new account</a>
-  </div>
-
-  @if (loading()) {
-    <div class="loading"><mat-spinner diameter="28"></mat-spinner></div>
-  } @else {
-    <div class="table" role="table">
-      <div class="table__row table__row--head" role="row">
-        <span role="columnheader">Name</span>
-        <span role="columnheader">Status</span>
-        <span role="columnheader">Email</span>
-        <span role="columnheader">Updated</span>
-      </div>
-      @for (row of summaries(); track row.id) {
-        <button class="table__row" type="button" role="row" (click)="openCustomer(row.id)">
-          <span role="cell">
-            <strong>{{ row.full_name }}</strong>
-            <small class="mono">{{ row.id }}</small>
-          </span>
-          <span role="cell"><mat-chip>{{ row.party_lifecycle_status }}</mat-chip></span>
-          <span role="cell">{{ row.primary_email || '—' }}</span>
-          <span role="cell">{{ row.updated_at | date: 'medium' }}</span>
-        </button>
+    @if (panelOpen()) {
+      @if (loading()) {
+        <div class="loading"><mat-spinner diameter="28"></mat-spinner></div>
+      } @else {
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>MDM ID</th>
+                <th>PARTY STATUS</th>
+                <th>PARTY LIFECYCLE STATUS</th>
+                <th>PARTY NAME</th>
+                <th>TAX ID TYPE</th>
+                <th>TAX ID VALUE</th>
+                <th>DATE OF BIRTH</th>
+                <th>LEGAL ADDRESS</th>
+                <th>PRIMARY ADDRESS</th>
+                <th>OTHER ADDRESS TYPE(Y/N)</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of summaries(); track row.id) {
+                <tr>
+                  <td>
+                    <button class="mdm-link" type="button" (click)="openCustomer(row.id)">
+                      {{ row.mdm_id }}
+                    </button>
+                  </td>
+                  <td>{{ row.party_status }}</td>
+                  <td>{{ row.party_lifecycle_status }}</td>
+                  <td>{{ row.full_name }}</td>
+                  <td>{{ row.tax_id_type }}</td>
+                  <td>{{ row.tax_id }}</td>
+                  <td>{{ row.dob | date: 'MM/dd/yyyy' }}</td>
+                  <td>{{ row.legal_address }}</td>
+                  <td>{{ row.primary_address }}</td>
+                  <td>{{ row.other_address_type }}</td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="10" class="empty">No customers found.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
       }
-    </div>
-  }
+    }
+  </div>
 </section>

@@ -7,89 +7,73 @@ import {
   TaxRegulatoryEntry
 } from '../models/customer.model';
 
-function uuid(seed: string): string {
-  // Deterministic-looking demo IDs for stable UX in MVP stubs.
-  return `00000000-0000-4000-8000-${seed.padStart(12, '0')}`;
-}
-
 const now = new Date().toISOString();
 
-const addressesA: Address[] = [
-  {
-    id: uuid('a10000000001'),
-    type: 'legal',
-    line1: '1200 Market Street',
-    line2: 'Suite 400',
-    city: 'San Francisco',
-    state: 'CA',
-    postal_code: '94102',
+function addr(
+  id: string,
+  type: Address['type'],
+  line1: string,
+  city: string,
+  state: string,
+  postal: string,
+  line2 = '',
+  validated = true
+): Address {
+  return {
+    id,
+    type,
+    line1,
+    line2: line2 || undefined,
+    city,
+    state,
+    postal_code: postal,
     country: 'US',
-    validated: true
-  },
-  {
-    id: uuid('a10000000002'),
-    type: 'primary',
-    line1: '88 Marina Blvd',
-    city: 'San Francisco',
-    state: 'CA',
-    postal_code: '94123',
-    country: 'US',
-    validated: true
-  }
-];
+    validated
+  };
+}
 
-const phonesA: Contact[] = [
-  {
-    id: uuid('c10000000001'),
-    customer_id: uuid('custo0000001'),
+function phone(id: string, customerId: string, value: string, preferred = true): Contact {
+  return {
+    id,
+    customer_id: customerId,
     type: 'mobile',
-    value: '+1 415 555 0142',
-    preferred: true,
+    value,
+    preferred,
     verified: true
-  },
-  {
-    id: uuid('c10000000002'),
-    customer_id: uuid('custo0000001'),
-    type: 'work',
-    value: '+1 415 555 0198',
-    preferred: false,
-    verified: false
-  }
-];
+  };
+}
 
-const emailsA: Contact[] = [
-  {
-    id: uuid('c10000000003'),
-    customer_id: uuid('custo0000001'),
+function email(id: string, customerId: string, value: string): Contact {
+  return {
+    id,
+    customer_id: customerId,
     type: 'email',
-    value: 'ava.chen@example.com',
+    value,
     preferred: true,
     verified: true
-  }
-];
+  };
+}
 
-const taxA: TaxRegulatoryEntry[] = [
-  {
-    id: uuid('t10000000001'),
-    tax_type: 'SSN',
-    tax_number: '***-**-4281',
-    country: 'US',
-    valid_from: '2018-01-01',
-    valid_to: null
-  },
-  {
-    id: uuid('t10000000002'),
-    tax_type: 'VAT',
-    tax_number: 'EU-778812',
-    country: 'DE',
-    valid_from: '2022-06-15',
-    valid_to: '2027-06-14'
-  }
-];
+const c1 = '200142074959';
+const c2 = '200142075012';
+const c3 = '200142075088';
+const c4 = '200142075141';
+const c5 = '200142075203';
 
-const cardsA: CreditCardToken[] = [
+const legal1 = addr('a-legal-1', 'legal', 'MCG', 'Atlanta', 'GA', '30303');
+const primary1 = addr('a-pri-1', 'primary', '20 BRANDON TRCE', 'Atlanta', 'GA', '30328');
+const legal2 = addr('a-legal-2', 'legal', 'str 1', 'Atlanta', 'GA', '30309');
+const primary2 = addr('a-pri-2', 'primary', '665 ONEIDA DR', 'Atlanta', 'GA', '30327');
+const legal3 = addr('a-legal-3', 'legal', 'MCG', 'Marietta', 'GA', '30060');
+const primary3 = addr('a-pri-3', 'primary', '107 N 24TH ST', 'Marietta', 'GA', '30060');
+const legal4 = addr('a-legal-4', 'legal', 'HQ', 'Decatur', 'GA', '30030');
+const primary4 = addr('a-pri-4', 'primary', '412 WILLOW LN', 'Decatur', 'GA', '30030');
+const legal5 = addr('a-legal-5', 'legal', 'MCG', 'Alpharetta', 'GA', '30009');
+const primary5 = addr('a-pri-5', 'primary', '88 PINE CREST RD', 'Alpharetta', 'GA', '30009');
+
+const cards: CreditCardToken[] = [
   {
-    id: uuid('cc1000000001'),
+    id: 'cc-1',
     brand: 'Visa',
     last4: '4242',
     exp_month: 8,
@@ -99,83 +83,129 @@ const cardsA: CreditCardToken[] = [
   }
 ];
 
-const enquiriesA: CustomerEnquiry[] = [
+const enquiry: CustomerEnquiry = {
+  id: 'enq-1',
+  customer_id: c1,
+  source: 'Call Center',
+  description: 'Confirm legal address change after relocation.',
+  created_by: 'agent.morgan',
+  status: 'In Progress',
+  created_at: '2026-09-02T14:22:00.000Z'
+};
+
+export const MOCK_CUSTOMERS: Customer[] = [
   {
-    id: uuid('e10000000001'),
-    customer_id: uuid('custo0000001'),
-    source: 'Call Center',
-    description: 'Confirm legal address change after relocation.',
-    created_by: 'agent.morgan',
-    status: 'In Progress',
-    created_at: '2026-09-02T14:22:00.000Z'
+    id: c1,
+    mdm_id: c1,
+    party_status: '',
+    party_lifecycle_status: 'PROSPECT',
+    first_name: 'S',
+    last_name: 'SMITH',
+    tax_id_type: 'SSN',
+    tax_id: '422605955',
+    dob: '1946-11-02',
+    legal_address_id: legal1.id,
+    primary_address_id: primary1.id,
+    addresses: [legal1, primary1],
+    phones: [phone('p1', c1, '+1 404 555 0101')],
+    emails: [email('e1', c1, 's.smith@example.com')],
+    tax_entries: [
+      {
+        id: 't1',
+        tax_type: 'SSN',
+        tax_number: '422605955',
+        country: 'US',
+        valid_from: '1964-01-01',
+        valid_to: null
+      } as TaxRegulatoryEntry
+    ],
+    credit_cards: cards,
+    enquiries: [enquiry],
+    created_at: '2020-01-10T09:00:00.000Z',
+    updated_at: now
+  },
+  {
+    id: c2,
+    mdm_id: c2,
+    party_status: '',
+    party_lifecycle_status: 'ACTIVE PARTY',
+    first_name: 'AM',
+    last_name: 'S SMITH',
+    tax_id_type: 'SSN',
+    tax_id: '318442177',
+    dob: '1952-04-18',
+    legal_address_id: legal2.id,
+    primary_address_id: primary2.id,
+    addresses: [legal2, primary2],
+    phones: [phone('p2', c2, '+1 404 555 0102')],
+    emails: [email('e2', c2, 'am.smith@example.com')],
+    tax_entries: [],
+    credit_cards: [],
+    enquiries: [],
+    created_at: '2019-06-01T09:00:00.000Z',
+    updated_at: now
+  },
+  {
+    id: c3,
+    mdm_id: c3,
+    party_status: '',
+    party_lifecycle_status: 'FORMER PARTY',
+    first_name: 'ADM',
+    last_name: 'S SMITH',
+    tax_id_type: 'SSN',
+    tax_id: '509118223',
+    dob: '1939-08-21',
+    legal_address_id: legal3.id,
+    primary_address_id: primary3.id,
+    addresses: [legal3, primary3],
+    phones: [phone('p3', c3, '+1 404 555 0103')],
+    emails: [email('e3', c3, 'adm.smith@example.com')],
+    tax_entries: [],
+    credit_cards: [],
+    enquiries: [],
+    created_at: '2015-03-12T09:00:00.000Z',
+    updated_at: now
+  },
+  {
+    id: c4,
+    mdm_id: c4,
+    party_status: '',
+    party_lifecycle_status: 'PROSPECT',
+    first_name: 'S',
+    last_name: 'SMITH',
+    tax_id_type: 'SSN',
+    tax_id: '277901445',
+    dob: '1981-01-09',
+    legal_address_id: legal4.id,
+    primary_address_id: primary4.id,
+    addresses: [legal4, primary4],
+    phones: [phone('p4', c4, '+1 404 555 0104')],
+    emails: [email('e4', c4, 's.smith2@example.com')],
+    tax_entries: [],
+    credit_cards: [],
+    enquiries: [],
+    created_at: '2024-11-01T09:00:00.000Z',
+    updated_at: now
+  },
+  {
+    id: c5,
+    mdm_id: c5,
+    party_status: '',
+    party_lifecycle_status: 'ACTIVE PARTY',
+    first_name: 'J',
+    last_name: 'SMITH',
+    tax_id_type: 'SSN',
+    tax_id: '601223889',
+    dob: '1974-12-30',
+    legal_address_id: legal5.id,
+    primary_address_id: primary5.id,
+    addresses: [legal5, primary5],
+    phones: [phone('p5', c5, '+1 404 555 0105')],
+    emails: [email('e5', c5, 'j.smith@example.com')],
+    tax_entries: [],
+    credit_cards: [],
+    enquiries: [],
+    created_at: '2021-07-20T09:00:00.000Z',
+    updated_at: now
   }
 ];
-
-const customerA: Customer = {
-  id: uuid('custo0000001'),
-  party_lifecycle_status: 'Active',
-  first_name: 'Ava',
-  last_name: 'Chen',
-  tax_id_type: 'SSN',
-  tax_id: '***-**-4281',
-  dob: '1991-04-18',
-  legal_address_id: addressesA[0].id,
-  primary_address_id: addressesA[1].id,
-  addresses: addressesA,
-  phones: phonesA,
-  emails: emailsA,
-  tax_entries: taxA,
-  credit_cards: cardsA,
-  enquiries: enquiriesA,
-  created_at: '2024-11-12T09:00:00.000Z',
-  updated_at: now
-};
-
-const customerB: Customer = {
-  id: uuid('custo0000002'),
-  party_lifecycle_status: 'Prospect',
-  first_name: 'Noah',
-  last_name: 'Patel',
-  tax_id_type: 'EIN',
-  tax_id: '12-3456789',
-  dob: '1986-09-03',
-  addresses: [
-    {
-      id: uuid('a20000000001'),
-      type: 'primary',
-      line1: '500 Peachtree Center Ave',
-      city: 'Atlanta',
-      state: 'GA',
-      postal_code: '30303',
-      country: 'US',
-      validated: false
-    }
-  ],
-  phones: [
-    {
-      id: uuid('c20000000001'),
-      customer_id: uuid('custo0000002'),
-      type: 'mobile',
-      value: '+1 404 555 0177',
-      preferred: true,
-      verified: false
-    }
-  ],
-  emails: [
-    {
-      id: uuid('c20000000002'),
-      customer_id: uuid('custo0000002'),
-      type: 'email',
-      value: 'noah.patel@example.com',
-      preferred: true,
-      verified: true
-    }
-  ],
-  tax_entries: [],
-  credit_cards: [],
-  enquiries: [],
-  created_at: '2026-08-20T11:30:00.000Z',
-  updated_at: '2026-09-01T16:45:00.000Z'
-};
-
-export const MOCK_CUSTOMERS: Customer[] = [customerA, customerB];

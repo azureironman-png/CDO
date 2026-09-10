@@ -1,9 +1,9 @@
 export type PartyLifecycleStatus =
-  | 'Prospect'
-  | 'Active'
-  | 'Inactive'
-  | 'Suspended'
-  | 'Closed';
+  | 'PROSPECT'
+  | 'ACTIVE PARTY'
+  | 'FORMER PARTY'
+  | 'INACTIVE'
+  | 'SUSPENDED';
 
 export type AddressType = 'legal' | 'primary' | 'mailing';
 export type ContactChannelType = 'mobile' | 'home' | 'work' | 'email';
@@ -61,6 +61,8 @@ export interface CustomerEnquiry {
 
 export interface Customer {
   id: string;
+  mdm_id: string;
+  party_status?: string;
   party_lifecycle_status: PartyLifecycleStatus;
   first_name: string;
   last_name: string;
@@ -81,8 +83,16 @@ export interface Customer {
 
 export interface CustomerSummary {
   id: string;
+  mdm_id: string;
   full_name: string;
+  party_status?: string;
   party_lifecycle_status: PartyLifecycleStatus;
+  tax_id_type?: string;
+  tax_id?: string;
+  dob?: string;
+  legal_address?: string;
+  primary_address?: string;
+  other_address_type: 'Y' | 'N';
   primary_email?: string;
   primary_phone?: string;
   updated_at: string;

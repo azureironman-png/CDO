@@ -1,23 +1,20 @@
 .panel {
-  max-width: 920px;
-  display: grid;
-  gap: 1rem;
+  background: #fff;
+  border: 1px solid #d0d0d0;
 }
 
-.panel__intro h2 {
-  margin: 0;
-  font-family: var(--cdo-display);
-  letter-spacing: -0.03em;
+.section-bar {
+  padding: 0.45rem 0.65rem;
+  background: #f18a1f;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
 }
 
-.panel__intro p,
 .meta {
-  margin: 0.35rem 0 0;
-  color: var(--cdo-muted);
-}
-
-.mono {
-  font-family: var(--cdo-mono);
+  margin: 0.65rem 0.75rem 0;
+  color: #666;
   font-size: 0.8rem;
 }
 
@@ -25,10 +22,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem 1rem;
-  padding: 1.1rem;
-  border-radius: 16px;
-  background: color-mix(in srgb, var(--cdo-surface) 94%, transparent);
-  border: 1px solid color-mix(in srgb, var(--cdo-ink) 10%, transparent);
+  padding: 0.85rem;
 }
 
 .actions {

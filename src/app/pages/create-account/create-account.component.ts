@@ -37,17 +37,17 @@ export class CreateAccountComponent {
 
   readonly submitting = signal(false);
   readonly statuses: PartyLifecycleStatus[] = [
-    'Prospect',
-    'Active',
-    'Inactive',
-    'Suspended',
-    'Closed'
+    'PROSPECT',
+    'ACTIVE PARTY',
+    'FORMER PARTY',
+    'INACTIVE',
+    'SUSPENDED'
   ];
 
   readonly partyForm = this.fb.nonNullable.group({
     first_name: ['', [Validators.required, Validators.maxLength(80)]],
     last_name: ['', [Validators.required, Validators.maxLength(80)]],
-    party_lifecycle_status: ['Prospect' as PartyLifecycleStatus, Validators.required],
+    party_lifecycle_status: ['PROSPECT' as PartyLifecycleStatus, Validators.required],
     dob: ['', [Validators.required, minimumAgeValidator(18)]],
     tax_id_type: ['SSN'],
     tax_id: ['', [taxIdValidator()]]
@@ -96,11 +96,15 @@ export class CreateAccountComponent {
     const address = this.addressForm.getRawValue();
     const contact = this.contactForm.getRawValue();
     const tax = this.taxForm.getRawValue();
-    const customerId = crypto.randomUUID();
+    const customerId =
+      crypto.randomUUID().replace(/\D/g, '').slice(0, 12).padStart(12, '2') ||
+      Date.now().toString().slice(-12);
     const addressId = crypto.randomUUID();
 
     const payload: Customer = {
       id: customerId,
+      mdm_id: customerId,
+      party_status: '',
       party_lifecycle_status: party.party_lifecycle_status,
       first_name: party.first_name,
       last_name: party.last_name,
@@ -113,6 +117,11 @@ export class CreateAccountComponent {
         {
           id: addressId,
           type: 'primary',
+          ...address
+        },
+        {
+          id: crypto.randomUUID(),
+          type: 'legal',
           ...address
         }
       ],

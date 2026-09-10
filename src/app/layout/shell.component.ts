@@ -1,11 +1,8 @@
 import { Component, computed, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet, Router } from '@angular/router';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { CustomerEtlService } from '../services/customer-etl.service';
 
@@ -17,11 +14,8 @@ import { CustomerEtlService } from '../services/customer-etl.service';
     RouterOutlet,
     RouterLink,
     RouterLinkActive,
-    MatToolbarModule,
     MatButtonModule,
     MatIconModule,
-    MatSidenavModule,
-    MatListModule,
     MatSnackBarModule
   ],
   templateUrl: './shell.component.html',
@@ -41,12 +35,12 @@ export class ShellComponent {
       return [];
     }
     return [
-      { label: 'Account Details', path: `/customers/${id}/account`, icon: 'badge' },
-      { label: 'Addresses', path: `/customers/${id}/addresses`, icon: 'home_work' },
-      { label: 'Contacts', path: `/customers/${id}/contacts`, icon: 'call' },
-      { label: 'Tax & Regulatory', path: `/customers/${id}/tax`, icon: 'gavel' },
-      { label: 'Credit Cards', path: `/customers/${id}/cards`, icon: 'credit_card' },
-      { label: 'Customer Enquiry', path: `/customers/${id}/enquiry`, icon: 'forum' }
+      { label: 'Account Details', path: `/customers/${id}/account` },
+      { label: 'Addresses', path: `/customers/${id}/addresses` },
+      { label: 'Contacts', path: `/customers/${id}/contacts` },
+      { label: 'Tax & Regulatory', path: `/customers/${id}/tax` },
+      { label: 'Credit Cards', path: `/customers/${id}/cards` },
+      { label: 'Customer Enquiry', path: `/customers/${id}/enquiry` }
     ];
   });
 

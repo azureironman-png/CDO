@@ -5,12 +5,11 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { Address, AddressType, Customer } from '../../models/customer.model';
+import { Address, Customer } from '../../models/customer.model';
 import { CustomerEtlService } from '../../services/customer-etl.service';
 
 @Component({
@@ -22,7 +21,6 @@ import { CustomerEtlService } from '../../services/customer-etl.service';
     MatTabsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule,
     MatCheckboxModule,
     MatButtonModule,
     MatChipsModule,
@@ -37,14 +35,21 @@ export class AddressesComponent implements OnInit {
   private readonly etl = inject(CustomerEtlService);
 
   readonly loading = signal(true);
-  readonly saving = signal(false);
+  readonly savingLegal = signal(false);
+  readonly savingPrimary = signal(false);
   readonly customer = signal<Customer | null>(null);
-  readonly selectedIndex = signal(0);
 
-  readonly types: AddressType[] = ['legal', 'primary', 'mailing'];
+  readonly legalForm = this.fb.nonNullable.group({
+    line1: ['', Validators.required],
+    line2: [''],
+    city: ['', Validators.required],
+    state: ['', Validators.required],
+    postal_code: ['', Validators.required],
+    country: ['US', Validators.required],
+    validated: [false]
+  });
 
-  readonly form = this.fb.nonNullable.group({
-    type: ['primary' as AddressType, Validators.required],
+  readonly primaryForm = this.fb.nonNullable.group({
     line1: ['', Validators.required],
     line2: [''],
     city: ['', Validators.required],
@@ -60,66 +65,75 @@ export class AddressesComponent implements OnInit {
     this.etl.getCustomer(id).subscribe({
       next: (customer) => {
         this.customer.set(customer);
-        if (customer.addresses[0]) {
-          this.loadAddress(customer.addresses[0]);
-        }
+        this.patchForms(customer);
         this.loading.set(false);
       },
       error: () => this.loading.set(false)
     });
   }
 
-  onTabChange(index: number): void {
-    this.selectedIndex.set(index);
-    const address = this.customer()?.addresses[index];
-    if (address) {
-      this.loadAddress(address);
-    }
+  validateLegal(): void {
+    this.legalForm.patchValue({ validated: true });
   }
 
-  validateAddress(): void {
-    // Stub for Google/Loqate integration in later weeks.
-    this.form.patchValue({ validated: true });
+  validatePrimary(): void {
+    this.primaryForm.patchValue({ validated: true });
   }
 
-  save(): void {
+  saveLegal(): void {
+    this.saveAddress('legal', this.legalForm, this.savingLegal);
+  }
+
+  savePrimary(): void {
+    this.saveAddress('primary', this.primaryForm, this.savingPrimary);
+  }
+
+  private saveAddress(
+    type: 'legal' | 'primary',
+    form: typeof this.legalForm,
+    saving: ReturnType<typeof signal<boolean>>
+  ): void {
     const current = this.customer();
-    if (!current || this.form.invalid) {
-      this.form.markAllAsTouched();
+    if (!current || form.invalid) {
+      form.markAllAsTouched();
       return;
     }
-    this.saving.set(true);
-    const idx = this.selectedIndex();
-    const existing = current.addresses[idx];
-    const value = this.form.getRawValue();
-    const updatedAddress: Address = {
+    saving.set(true);
+    const existing = current.addresses.find((a) => a.type === type);
+    const value = form.getRawValue();
+    const updated: Address = {
       id: existing?.id ?? crypto.randomUUID(),
+      type,
       ...value
     };
-    const addresses = [...current.addresses];
-    if (existing) {
-      addresses[idx] = updatedAddress;
-    } else {
-      addresses.push(updatedAddress);
-    }
+    const addresses = [
+      ...current.addresses.filter((a) => a.type !== type),
+      updated
+    ];
     const payload: Customer = {
       ...current,
       addresses,
-      legal_address_id:
-        updatedAddress.type === 'legal' ? updatedAddress.id : current.legal_address_id,
-      primary_address_id:
-        updatedAddress.type === 'primary' ? updatedAddress.id : current.primary_address_id
+      legal_address_id: type === 'legal' ? updated.id : current.legal_address_id,
+      primary_address_id: type === 'primary' ? updated.id : current.primary_address_id
     };
     this.etl.saveCustomer(payload).subscribe({
       next: () => {
         this.customer.set(payload);
-        this.saving.set(false);
+        this.patchForms(payload);
+        saving.set(false);
       },
-      error: () => this.saving.set(false)
+      error: () => saving.set(false)
     });
   }
 
-  private loadAddress(address: Address): void {
-    this.form.patchValue(address);
+  private patchForms(customer: Customer): void {
+    const legal = customer.addresses.find((a) => a.type === 'legal');
+    const primary = customer.addresses.find((a) => a.type === 'primary');
+    if (legal) {
+      this.legalForm.patchValue(legal);
+    }
+    if (primary) {
+      this.primaryForm.patchValue(primary);
+    }
   }
 }

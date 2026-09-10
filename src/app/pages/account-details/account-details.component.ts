@@ -36,17 +36,17 @@ export class AccountDetailsComponent implements OnInit {
   readonly customer = signal<Customer | null>(null);
 
   readonly statuses: PartyLifecycleStatus[] = [
-    'Prospect',
-    'Active',
-    'Inactive',
-    'Suspended',
-    'Closed'
+    'PROSPECT',
+    'ACTIVE PARTY',
+    'FORMER PARTY',
+    'INACTIVE',
+    'SUSPENDED'
   ];
 
   readonly form = this.fb.nonNullable.group({
     first_name: ['', [Validators.required, Validators.maxLength(80)]],
     last_name: ['', [Validators.required, Validators.maxLength(80)]],
-    party_lifecycle_status: ['Active' as PartyLifecycleStatus, Validators.required],
+    party_lifecycle_status: ['PROSPECT' as PartyLifecycleStatus, Validators.required],
     tax_id_type: [''],
     tax_id: ['', [taxIdValidator()]],
     dob: ['', [minimumAgeValidator(18)]]

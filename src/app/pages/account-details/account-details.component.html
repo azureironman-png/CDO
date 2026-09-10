@@ -1,13 +1,12 @@
 <section class="panel">
-  <div class="panel__intro">
-    <h2>Account Details</h2>
-    <p>Editable party attributes. Saves through Middleware ETL into the MDM store.</p>
-  </div>
+  <div class="section-bar">ACCOUNT DETAILS</div>
 
   @if (loading()) {
     <div class="loading"><mat-spinner diameter="28"></mat-spinner></div>
   } @else if (customer()) {
-    <p class="meta mono">{{ customer()!.id }} · updated {{ customer()!.updated_at | date: 'medium' }}</p>
+    <p class="meta">
+      MDM ID {{ customer()!.mdm_id }} · updated {{ customer()!.updated_at | date: 'medium' }}
+    </p>
 
     <form class="form-grid" [formGroup]="form" (ngSubmit)="save()">
       <mat-form-field appearance="outline">

@@ -16,7 +16,7 @@ export class CustomerEtlService {
     structuredClone(MOCK_CUSTOMERS)
   );
 
-  readonly selectedCustomerId = signal<string | null>(MOCK_CUSTOMERS[0].id);
+  readonly selectedCustomerId = signal<string | null>(null);
   readonly lastEtlMessage = signal<string | null>(null);
 
   constructor(private readonly http: HttpClient) {}
@@ -90,9 +90,11 @@ export class CustomerEtlService {
   }
 
   createCustomer(customer: Customer): Observable<EtlSaveResult> {
+    const id = customer.id || crypto.randomUUID().replace(/\D/g, '').slice(0, 12).padStart(12, '2');
     const created: Customer = {
       ...customer,
-      id: customer.id || crypto.randomUUID(),
+      id,
+      mdm_id: customer.mdm_id || id,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     };
@@ -148,13 +150,28 @@ export class CustomerEtlService {
   }
 
   private toSummaries(customers: Customer[]): CustomerSummary[] {
-    return customers.map((c) => ({
-      id: c.id,
-      full_name: `${c.first_name} ${c.last_name}`,
-      party_lifecycle_status: c.party_lifecycle_status,
-      primary_email: c.emails.find((e) => e.preferred)?.value ?? c.emails[0]?.value,
-      primary_phone: c.phones.find((p) => p.preferred)?.value ?? c.phones[0]?.value,
-      updated_at: c.updated_at
-    }));
+    return customers.map((c) => {
+      const legal = c.addresses.find((a) => a.type === 'legal');
+      const primary = c.addresses.find((a) => a.type === 'primary');
+      const other = c.addresses.some((a) => a.type !== 'legal' && a.type !== 'primary');
+      return {
+        id: c.id,
+        mdm_id: c.mdm_id,
+        full_name: `${c.first_name} ${c.last_name}`.toUpperCase(),
+        party_status: c.party_status || '',
+        party_lifecycle_status: c.party_lifecycle_status,
+        tax_id_type: c.tax_id_type,
+        tax_id: c.tax_id,
+        dob: c.dob,
+        legal_address: legal ? legal.line1 : '',
+        primary_address: primary
+          ? [primary.line1, primary.line2].filter(Boolean).join(' ')
+          : '',
+        other_address_type: other ? 'Y' : 'N',
+        primary_email: c.emails.find((e) => e.preferred)?.value ?? c.emails[0]?.value,
+        primary_phone: c.phones.find((p) => p.preferred)?.value ?? c.phones[0]?.value,
+        updated_at: c.updated_at
+      };
+    });
   }
 }

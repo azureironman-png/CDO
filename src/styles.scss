@@ -1,26 +1,28 @@
 @use '@angular/material' as mat;
 
 :root {
-  --cdo-teal: #0f7a84;
-  --cdo-teal-deep: #0a5c63;
-  --cdo-ink: #15242b;
-  --cdo-muted: #5b6b73;
-  --cdo-surface: #f3f7f7;
-  --cdo-display: 'Sora', 'Segoe UI', sans-serif;
-  --cdo-body: 'Figtree', 'Segoe UI', sans-serif;
-  --cdo-mono: 'IBM Plex Mono', ui-monospace, monospace;
+  --cdo-orange: #f18a1f;
+  --cdo-orange-deep: #c56a00;
+  --cdo-ink: #222;
+  --cdo-muted: #666;
+  --cdo-surface: #ffffff;
+  --cdo-display: Arial, Helvetica, sans-serif;
+  --cdo-body: Arial, Helvetica, sans-serif;
+  --cdo-mono: 'IBM Plex Mono', Consolas, monospace;
+  --cdo-teal: #f18a1f;
+  --cdo-teal-deep: #c56a00;
 }
 
 $cdo-theme: mat.define-theme(
   (
     color: (
       theme-type: light,
-      primary: mat.$cyan-palette,
-      tertiary: mat.$orange-palette
+      primary: mat.$orange-palette,
+      tertiary: mat.$azure-palette
     ),
     typography: (
-      plain-family: Figtree,
-      brand-family: Sora
+      plain-family: Arial,
+      brand-family: Arial
     ),
     density: (
       scale: -1
@@ -47,11 +49,7 @@ body {
   margin: 0;
   font-family: var(--cdo-body);
   color: var(--cdo-ink);
-  background:
-    radial-gradient(ellipse 80% 55% at 8% -10%, rgba(15, 122, 132, 0.22), transparent 55%),
-    radial-gradient(ellipse 60% 45% at 100% 0%, rgba(214, 137, 68, 0.14), transparent 50%),
-    linear-gradient(180deg, #e8f1f2 0%, #f7fafb 42%, #eef3f4 100%);
-  background-attachment: fixed;
+  background: #f2f2f2;
 }
 
 a {
@@ -66,4 +64,9 @@ textarea {
 
 .mat-mdc-form-field {
   width: 100%;
+}
+
+.panel .panel__intro h2,
+.section-bar {
+  font-family: Arial, Helvetica, sans-serif;
 }
