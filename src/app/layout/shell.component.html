@@ -3,7 +3,6 @@
     <div class="app-header__spacer"></div>
     <h1 class="app-header__title">CUSTOMER DATA ESSENTIALS</h1>
     <div class="app-header__right">
-      <span class="app-header__code">CDOMT01</span>
       <button class="linkish" type="button" (click)="createAccount()">New Account</button>
     </div>
   </header>
@@ -15,6 +14,7 @@
       [routerLinkActiveOptions]="{ exact: true }"
       >Customer Search</a
     >
+    <a routerLink="/customers/new" routerLinkActive="is-active">Create New Account</a>
     @for (item of customerNav(); track item.path) {
       <a [routerLink]="item.path" routerLinkActive="is-active">{{ item.label }}</a>
     }

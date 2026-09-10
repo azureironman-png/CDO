@@ -95,4 +95,14 @@ export class AccountDetailsComponent implements OnInit {
       error: () => this.saving.set(false)
     });
   }
+
+  addressLine(type: 'legal' | 'primary'): string {
+    const address = this.customer()?.addresses.find((a) => a.type === type);
+    if (!address) {
+      return '—';
+    }
+    return [address.line1, address.line2, address.city, address.state, address.postal_code]
+      .filter(Boolean)
+      .join(', ');
+  }
 }

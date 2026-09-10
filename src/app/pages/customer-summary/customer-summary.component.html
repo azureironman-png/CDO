@@ -1,4 +1,10 @@
 <section class="cde-page">
+  <p class="intro">
+    Customer Data Essentials — search party records, then open Account Details, Addresses
+    (Legal / Primary), Contacts, Tax &amp; Regulatory, Credit Cards, or Customer Enquiry.
+    Saves go through Middleware ETL to MDM.
+  </p>
+
   <form class="search-bar" [formGroup]="searchForm" (ngSubmit)="search()">
     <label for="mdm-query">Search MDM ID / Name</label>
     <input id="mdm-query" formControlName="query" placeholder="e.g. 200142074959 or SMITH" />

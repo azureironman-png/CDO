@@ -4,62 +4,108 @@
   @if (loading()) {
     <div class="loading"><mat-spinner diameter="28"></mat-spinner></div>
   } @else if (customer()) {
-    <p class="meta">
-      MDM ID {{ customer()!.mdm_id }} · updated {{ customer()!.updated_at | date: 'medium' }}
-    </p>
+    <div class="detail-wrap">
+      <p class="meta">
+        MDM ID {{ customer()!.mdm_id }} · updated {{ customer()!.updated_at | date: 'medium' }}
+      </p>
 
-    <form class="form-grid" [formGroup]="form" (ngSubmit)="save()">
-      <mat-form-field appearance="outline">
-        <mat-label>First name</mat-label>
-        <input matInput formControlName="first_name" />
-        <mat-error>Required</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Last name</mat-label>
-        <input matInput formControlName="last_name" />
-        <mat-error>Required</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Lifecycle status</mat-label>
-        <mat-select formControlName="party_lifecycle_status">
-          @for (s of statuses; track s) {
-            <mat-option [value]="s">{{ s }}</mat-option>
-          }
-        </mat-select>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Date of birth</mat-label>
-        <input matInput type="date" formControlName="dob" />
-        @if (form.controls.dob.hasError('minAge')) {
-          <mat-error>Customer must be at least 18</mat-error>
-        }
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Tax ID type</mat-label>
-        <input matInput formControlName="tax_id_type" placeholder="SSN / EIN / VAT" />
-      </mat-form-field>
-
-      <mat-form-field appearance="outline">
-        <mat-label>Tax ID</mat-label>
-        <input matInput formControlName="tax_id" />
-        @if (form.controls.tax_id.hasError('taxId')) {
-          <mat-error>Invalid tax ID format</mat-error>
-        }
-      </mat-form-field>
-
-      <div class="actions">
-        <button mat-flat-button color="primary" type="submit" [disabled]="saving() || form.invalid">
-          @if (saving()) {
-            <mat-spinner diameter="18"></mat-spinner>
-          } @else {
-            Save to ETL
-          }
-        </button>
+      <div class="overview">
+        <h3>Party overview</h3>
+        <div class="overview__grid">
+          <div>
+            <span class="label">Preferred email</span>
+            <strong>{{ customer()!.emails[0]?.value || '—' }}</strong>
+          </div>
+          <div>
+            <span class="label">Preferred phone</span>
+            <strong>{{ customer()!.phones[0]?.value || '—' }}</strong>
+          </div>
+          <div>
+            <span class="label">Legal address</span>
+            <strong>{{ addressLine('legal') }}</strong>
+          </div>
+          <div>
+            <span class="label">Primary address</span>
+            <strong>{{ addressLine('primary') }}</strong>
+          </div>
+          <div>
+            <span class="label">Tax entries</span>
+            <strong>{{ customer()!.tax_entries.length }}</strong>
+          </div>
+          <div>
+            <span class="label">Tokenized cards</span>
+            <strong>{{ customer()!.credit_cards.length }}</strong>
+          </div>
+          <div>
+            <span class="label">Open enquiries</span>
+            <strong>{{ customer()!.enquiries.length }}</strong>
+          </div>
+          <div>
+            <span class="label">Created</span>
+            <strong>{{ customer()!.created_at | date: 'mediumDate' }}</strong>
+          </div>
+        </div>
+        <p class="hint">
+          Use the tabs above for Addresses (Legal / Primary), Contacts, Tax &amp; Regulatory,
+          Credit Cards, and Customer Enquiry — all still save through Middleware ETL → MDM.
+        </p>
       </div>
-    </form>
+
+      <form class="form-grid" [formGroup]="form" (ngSubmit)="save()">
+        <h3 class="form-title">Editable account fields</h3>
+
+        <mat-form-field appearance="outline">
+          <mat-label>First name</mat-label>
+          <input matInput formControlName="first_name" />
+          <mat-error>Required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Last name</mat-label>
+          <input matInput formControlName="last_name" />
+          <mat-error>Required</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Lifecycle status</mat-label>
+          <mat-select formControlName="party_lifecycle_status">
+            @for (s of statuses; track s) {
+              <mat-option [value]="s">{{ s }}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Date of birth</mat-label>
+          <input matInput type="date" formControlName="dob" />
+          @if (form.controls.dob.hasError('minAge')) {
+            <mat-error>Customer must be at least 18</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Tax ID type</mat-label>
+          <input matInput formControlName="tax_id_type" placeholder="SSN / EIN / VAT" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Tax ID</mat-label>
+          <input matInput formControlName="tax_id" />
+          @if (form.controls.tax_id.hasError('taxId')) {
+            <mat-error>Invalid tax ID format</mat-error>
+          }
+        </mat-form-field>
+
+        <div class="actions">
+          <button mat-flat-button color="primary" type="submit" [disabled]="saving() || form.invalid">
+            @if (saving()) {
+              <mat-spinner diameter="18"></mat-spinner>
+            } @else {
+              Save to ETL
+            }
+          </button>
+        </div>
+      </form>
+    </div>
   }
 </section>

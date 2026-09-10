@@ -207,5 +207,98 @@ export const MOCK_CUSTOMERS: Customer[] = [
     enquiries: [],
     created_at: '2021-07-20T09:00:00.000Z',
     updated_at: now
+  },
+  {
+    id: '200142080001',
+    mdm_id: '200142080001',
+    party_status: '',
+    party_lifecycle_status: 'ACTIVE PARTY',
+    first_name: 'Ava',
+    last_name: 'Chen',
+    tax_id_type: 'SSN',
+    tax_id: '428119933',
+    dob: '1991-04-18',
+    legal_address_id: 'a-legal-ava',
+    primary_address_id: 'a-pri-ava',
+    addresses: [
+      addr('a-legal-ava', 'legal', '1200 Market Street', 'San Francisco', 'CA', '94102', 'Suite 400'),
+      addr('a-pri-ava', 'primary', '88 Marina Blvd', 'San Francisco', 'CA', '94123')
+    ],
+    phones: [
+      phone('p-ava-1', '200142080001', '+1 415 555 0142', true),
+      {
+        id: 'p-ava-2',
+        customer_id: '200142080001',
+        type: 'work',
+        value: '+1 415 555 0198',
+        preferred: false,
+        verified: false
+      }
+    ],
+    emails: [email('e-ava', '200142080001', 'ava.chen@example.com')],
+    tax_entries: [
+      {
+        id: 't-ava-1',
+        tax_type: 'SSN',
+        tax_number: '***-**-4281',
+        country: 'US',
+        valid_from: '2018-01-01',
+        valid_to: null
+      },
+      {
+        id: 't-ava-2',
+        tax_type: 'VAT',
+        tax_number: 'EU-778812',
+        country: 'DE',
+        valid_from: '2022-06-15',
+        valid_to: '2027-06-14'
+      }
+    ],
+    credit_cards: [
+      {
+        id: 'cc-ava',
+        brand: 'Visa',
+        last4: '4242',
+        exp_month: 8,
+        exp_year: 2028,
+        token_ref: 'tok_vault_9f2a1c',
+        status: 'Active'
+      }
+    ],
+    enquiries: [
+      {
+        id: 'enq-ava',
+        customer_id: '200142080001',
+        source: 'Call Center',
+        description: 'Confirm legal address change after relocation.',
+        created_by: 'agent.morgan',
+        status: 'In Progress',
+        created_at: '2026-09-02T14:22:00.000Z'
+      }
+    ],
+    created_at: '2024-11-12T09:00:00.000Z',
+    updated_at: now
+  },
+  {
+    id: '200142080002',
+    mdm_id: '200142080002',
+    party_status: '',
+    party_lifecycle_status: 'PROSPECT',
+    first_name: 'Noah',
+    last_name: 'Patel',
+    tax_id_type: 'EIN',
+    tax_id: '12-3456789',
+    dob: '1986-09-03',
+    primary_address_id: 'a-pri-noah',
+    addresses: [
+      addr('a-pri-noah', 'primary', '500 Peachtree Center Ave', 'Atlanta', 'GA', '30303', '', false)
+    ],
+    phones: [phone('p-noah', '200142080002', '+1 404 555 0177')],
+    emails: [email('e-noah', '200142080002', 'noah.patel@example.com')],
+    tax_entries: [],
+    credit_cards: [],
+    enquiries: [],
+    created_at: '2026-08-20T11:30:00.000Z',
+    updated_at: '2026-09-01T16:45:00.000Z'
   }
 ];
