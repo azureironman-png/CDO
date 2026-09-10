@@ -1,0 +1,59 @@
+<section class="panel">
+  <div class="panel__intro">
+    <h2>Customer Enquiry</h2>
+    <p>Capture service enquiries linked to the party and persist via ETL.</p>
+  </div>
+
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="28"></mat-spinner></div>
+  } @else if (customer()) {
+    <form class="form" [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field appearance="outline">
+        <mat-label>Source</mat-label>
+        <input matInput formControlName="source" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Created by</mat-label>
+        <input matInput formControlName="created_by" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Status</mat-label>
+        <mat-select formControlName="status">
+          @for (s of statuses; track s) {
+            <mat-option [value]="s">{{ s }}</mat-option>
+          }
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="span-all">
+        <mat-label>Description</mat-label>
+        <textarea matInput rows="4" formControlName="description"></textarea>
+        <mat-error>Provide at least 10 characters</mat-error>
+      </mat-form-field>
+      <div class="actions span-all">
+        <button mat-flat-button color="primary" type="submit" [disabled]="saving() || form.invalid">
+          Log enquiry
+        </button>
+      </div>
+    </form>
+
+    <div class="history">
+      <h3>History</h3>
+      @if (!customer()!.enquiries.length) {
+        <p class="empty">No enquiries yet.</p>
+      } @else {
+        @for (item of customer()!.enquiries; track item.id) {
+          <article class="item">
+            <div class="item__top">
+              <strong>{{ item.source }}</strong>
+              <mat-chip>{{ item.status }}</mat-chip>
+            </div>
+            <p>{{ item.description }}</p>
+            <p class="meta">
+              {{ item.created_by }} · {{ item.created_at | date: 'medium' }}
+            </p>
+          </article>
+        }
+      }
+    </div>
+  }
+</section>

@@ -1,0 +1,76 @@
+<section class="panel">
+  <div class="panel__intro">
+    <h2>Contacts</h2>
+    <p>Phones and emails with preferred + verification flags for offline client rules.</p>
+  </div>
+
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="28"></mat-spinner></div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="section">
+        <div class="section__head">
+          <h3>Phones</h3>
+          <button mat-stroked-button type="button" (click)="addPhone()">
+            <mat-icon>add</mat-icon> Add phone
+          </button>
+        </div>
+        <div formArrayName="phones" class="stack">
+          @for (ctrl of phones.controls; track $index; let i = $index) {
+            <div class="row" [formGroupName]="i">
+              <mat-form-field appearance="outline">
+                <mat-label>Type</mat-label>
+                <mat-select formControlName="type">
+                  <mat-option value="mobile">Mobile</mat-option>
+                  <mat-option value="home">Home</mat-option>
+                  <mat-option value="work">Work</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Number</mat-label>
+                <input matInput formControlName="value" />
+                <mat-error>Valid phone required</mat-error>
+              </mat-form-field>
+              <mat-checkbox formControlName="preferred">Preferred</mat-checkbox>
+              <mat-checkbox formControlName="verified">Verified</mat-checkbox>
+              <button mat-icon-button type="button" aria-label="Remove phone" (click)="removePhone(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section__head">
+          <h3>Emails</h3>
+          <button mat-stroked-button type="button" (click)="addEmail()">
+            <mat-icon>add</mat-icon> Add email
+          </button>
+        </div>
+        <div formArrayName="emails" class="stack">
+          @for (ctrl of emails.controls; track $index; let i = $index) {
+            <div class="row" [formGroupName]="i">
+              <mat-form-field appearance="outline" class="grow">
+                <mat-label>Email</mat-label>
+                <input matInput formControlName="value" />
+                <mat-error>Valid email required</mat-error>
+              </mat-form-field>
+              <mat-checkbox formControlName="preferred">Preferred</mat-checkbox>
+              <mat-checkbox formControlName="verified">Verified</mat-checkbox>
+              <button mat-icon-button type="button" aria-label="Remove email" (click)="removeEmail(i)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" [disabled]="saving() || form.invalid">
+          Save contacts
+        </button>
+      </div>
+    </form>
+  }
+</section>

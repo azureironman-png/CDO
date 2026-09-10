@@ -1,0 +1,55 @@
+<section class="panel">
+  <div class="panel__intro">
+    <h2>Tax &amp; Regulatory</h2>
+    <p>Tax identifiers with validity windows for compliance and MDM enrichment.</p>
+  </div>
+
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="28"></mat-spinner></div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <div class="section__head">
+        <h3>Entries</h3>
+        <button mat-stroked-button type="button" (click)="addEntry()">
+          <mat-icon>add</mat-icon> Add entry
+        </button>
+      </div>
+
+      <div formArrayName="entries" class="stack">
+        @for (ctrl of entries.controls; track $index; let i = $index) {
+          <div class="row" [formGroupName]="i">
+            <mat-form-field appearance="outline">
+              <mat-label>Tax type</mat-label>
+              <input matInput formControlName="tax_type" placeholder="SSN / VAT / GST" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Tax number</mat-label>
+              <input matInput formControlName="tax_number" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Country</mat-label>
+              <input matInput formControlName="country" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Valid from</mat-label>
+              <input matInput type="date" formControlName="valid_from" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Valid to</mat-label>
+              <input matInput type="date" formControlName="valid_to" />
+            </mat-form-field>
+            <button mat-icon-button type="button" aria-label="Remove" (click)="removeEntry(i)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        }
+      </div>
+
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit" [disabled]="saving() || form.invalid">
+          Save tax data
+        </button>
+      </div>
+    </form>
+  }
+</section>

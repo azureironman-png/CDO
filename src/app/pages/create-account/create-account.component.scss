@@ -1,0 +1,62 @@
+.panel {
+  max-width: 920px;
+  display: grid;
+  gap: 1rem;
+}
+
+.panel__intro h2 {
+  margin: 0;
+  font-family: var(--cdo-display);
+  letter-spacing: -0.03em;
+}
+
+.panel__intro p {
+  margin: 0.35rem 0 0;
+  color: var(--cdo-muted);
+}
+
+.wizard {
+  background: color-mix(in srgb, var(--cdo-surface) 94%, transparent);
+  border: 1px solid color-mix(in srgb, var(--cdo-ink) 10%, transparent);
+  border-radius: 16px;
+  padding: 0.5rem 0.75rem 1rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 1rem;
+  margin-top: 0.75rem;
+}
+
+.span-2 {
+  grid-column: 1 / -1;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+}
+
+.review {
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--cdo-teal) 8%, white);
+  border: 1px solid color-mix(in srgb, var(--cdo-teal) 22%, transparent);
+}
+
+.review h3 {
+  margin: 0 0 0.4rem;
+}
+
+.review p {
+  margin: 0.2rem 0;
+  color: var(--cdo-ink);
+}
+
+@media (max-width: 720px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

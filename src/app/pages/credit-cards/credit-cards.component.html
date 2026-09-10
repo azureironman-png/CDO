@@ -1,0 +1,40 @@
+<section class="panel">
+  <div class="panel__intro">
+    <h2>Credit Cards</h2>
+    <p>
+      Tokenized representations only — PAN never enters this UI. Vault tokens are read from MDM
+      via ETL for display and status.
+    </p>
+  </div>
+
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="28"></mat-spinner></div>
+  } @else if (customer()) {
+    @if (!customer()!.credit_cards.length) {
+      <p class="empty">No tokenized instruments on file.</p>
+    } @else {
+      <div class="cards">
+        @for (card of customer()!.credit_cards; track card.id) {
+          <article class="instrument">
+            <div class="instrument__brand">
+              <mat-icon>credit_card</mat-icon>
+              <strong>{{ card.brand }}</strong>
+            </div>
+            <p class="pan mono">•••• {{ card.last4 }}</p>
+            <p class="meta">
+              Exp {{ card.exp_month | number: '2.0-0' }}/{{ card.exp_year }}
+            </p>
+            <p class="meta mono">token: {{ card.token_ref }}</p>
+            <mat-chip-set>
+              <mat-chip>{{ card.status }}</mat-chip>
+            </mat-chip-set>
+          </article>
+        }
+      </div>
+    }
+    <p class="note">
+      PCI note: card capture must go through a compliant vault; this screen only renders masked
+      metadata.
+    </p>
+  }
+</section>
