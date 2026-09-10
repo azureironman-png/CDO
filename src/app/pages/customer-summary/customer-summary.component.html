@@ -37,6 +37,8 @@
                 <th>TAX ID TYPE</th>
                 <th>TAX ID VALUE</th>
                 <th>DATE OF BIRTH</th>
+                <th>PHONE</th>
+                <th>EMAIL</th>
                 <th>LEGAL ADDRESS</th>
                 <th>PRIMARY ADDRESS</th>
                 <th>OTHER ADDRESS TYPE(Y/N)</th>
@@ -56,13 +58,15 @@
                   <td>{{ row.tax_id_type }}</td>
                   <td>{{ row.tax_id }}</td>
                   <td>{{ row.dob | date: 'MM/dd/yyyy' }}</td>
+                  <td>{{ row.primary_phone || '—' }}</td>
+                  <td>{{ row.primary_email || '—' }}</td>
                   <td>{{ row.legal_address }}</td>
                   <td>{{ row.primary_address }}</td>
                   <td>{{ row.other_address_type }}</td>
                 </tr>
               } @empty {
                 <tr>
-                  <td colspan="10" class="empty">No customers found.</td>
+                  <td colspan="12" class="empty">No customers found.</td>
                 </tr>
               }
             </tbody>
