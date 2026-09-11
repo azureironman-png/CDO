@@ -1,0 +1,109 @@
+<section class="panel">
+  <div class="section-bar">ADDRESSES</div>
+
+  @if (loading()) {
+    <div class="loading"><mat-spinner diameter="28"></mat-spinner></div>
+  } @else {
+    <mat-tab-group animationDuration="120ms" class="address-tabs">
+      <mat-tab label="Legal">
+        <form class="form-grid" [formGroup]="legalForm" (ngSubmit)="saveLegal()">
+          <p class="hint">Legal address (separate from Primary)</p>
+          <div class="validate-row">
+            <mat-checkbox formControlName="validated">Validated</mat-checkbox>
+            <button mat-stroked-button type="button" (click)="validateLegal()">
+              Run address validation
+            </button>
+            @if (legalForm.value.validated) {
+              <mat-chip>Validated</mat-chip>
+            }
+          </div>
+
+          <mat-form-field appearance="outline" class="span-2">
+            <mat-label>Line 1</mat-label>
+            <input matInput formControlName="line1" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="span-2">
+            <mat-label>Line 2</mat-label>
+            <input matInput formControlName="line2" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>City</mat-label>
+            <input matInput formControlName="city" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>State</mat-label>
+            <input matInput formControlName="state" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Postal code</mat-label>
+            <input matInput formControlName="postal_code" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Country</mat-label>
+            <input matInput formControlName="country" />
+          </mat-form-field>
+          <div class="actions span-2">
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="savingLegal() || legalForm.invalid"
+            >
+              Save Legal Address
+            </button>
+          </div>
+        </form>
+      </mat-tab>
+
+      <mat-tab label="Primary">
+        <form class="form-grid" [formGroup]="primaryForm" (ngSubmit)="savePrimary()">
+          <p class="hint">Primary address (separate from Legal)</p>
+          <div class="validate-row">
+            <mat-checkbox formControlName="validated">Validated</mat-checkbox>
+            <button mat-stroked-button type="button" (click)="validatePrimary()">
+              Run address validation
+            </button>
+            @if (primaryForm.value.validated) {
+              <mat-chip>Validated</mat-chip>
+            }
+          </div>
+
+          <mat-form-field appearance="outline" class="span-2">
+            <mat-label>Line 1</mat-label>
+            <input matInput formControlName="line1" />
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="span-2">
+            <mat-label>Line 2</mat-label>
+            <input matInput formControlName="line2" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>City</mat-label>
+            <input matInput formControlName="city" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>State</mat-label>
+            <input matInput formControlName="state" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Postal code</mat-label>
+            <input matInput formControlName="postal_code" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Country</mat-label>
+            <input matInput formControlName="country" />
+          </mat-form-field>
+          <div class="actions span-2">
+            <button
+              mat-flat-button
+              color="primary"
+              type="submit"
+              [disabled]="savingPrimary() || primaryForm.invalid"
+            >
+              Save Primary Address
+            </button>
+          </div>
+        </form>
+      </mat-tab>
+    </mat-tab-group>
+  }
+</section>

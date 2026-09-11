@@ -1,0 +1,147 @@
+.cde-page {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.intro {
+  margin: 0;
+  padding: 0.55rem 0.65rem;
+  background: #fff;
+  border: 1px solid #d0d0d0;
+  color: #555;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.search-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.65rem;
+  background: #fff;
+  border: 1px solid #d0d0d0;
+}
+
+.search-bar label {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #444;
+}
+
+.search-bar input {
+  min-width: 220px;
+  flex: 1 1 240px;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #bdbdbd;
+  font-size: 0.85rem;
+}
+
+.search-bar button {
+  padding: 0.35rem 0.8rem;
+  border: 1px solid #c56a00;
+  background: #f18a1f;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.search-bar button.secondary {
+  background: #fff;
+  color: #8a4b00;
+}
+
+.banner {
+  margin: 0;
+  padding: 0.55rem 0.7rem;
+  background: #fff4e5;
+  border: 1px solid #f0c27a;
+  color: #8a4b00;
+  font-size: 0.85rem;
+}
+
+.results-panel {
+  border: 1px solid #d0d0d0;
+  background: #fff;
+}
+
+.results-panel__head {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.65rem;
+  border: 0;
+  background: #f18a1f;
+  color: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-align: left;
+  cursor: pointer;
+}
+
+.table-wrap {
+  overflow: auto;
+  max-height: min(70vh, 640px);
+}
+
+.results-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.78rem;
+}
+
+.results-table th,
+.results-table td {
+  padding: 0.4rem 0.5rem;
+  border-bottom: 1px solid #e2e2e2;
+  border-right: 1px solid #ececec;
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.results-table th {
+  position: sticky;
+  top: 0;
+  background: #ececec;
+  color: #333;
+  font-weight: 700;
+  z-index: 1;
+}
+
+.results-table tbody tr:nth-child(even) {
+  background: #f7f7f7;
+}
+
+.results-table tbody tr:hover {
+  background: #fff4e5;
+}
+
+.mdm-link {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: #1565c0;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.empty {
+  text-align: center !important;
+  color: #777;
+  padding: 1rem !important;
+}
+
+.loading {
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+}

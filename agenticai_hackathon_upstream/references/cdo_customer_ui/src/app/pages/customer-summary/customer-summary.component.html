@@ -1,0 +1,78 @@
+<section class="cde-page">
+  <p class="intro">
+    Customer Data Essentials — search party records, then open Account Details, Addresses
+    (Legal / Primary), Contacts, Tax &amp; Regulatory, Credit Cards, or Customer Enquiry.
+    Saves go through Middleware ETL to MDM.
+  </p>
+
+  <form class="search-bar" [formGroup]="searchForm" (ngSubmit)="search()">
+    <label for="mdm-query">Search MDM ID / Name</label>
+    <input id="mdm-query" formControlName="query" placeholder="e.g. 200142074959 or SMITH" />
+    <button type="submit" [disabled]="searching()">Search</button>
+    <button type="button" class="secondary" (click)="loadAll()">Reset</button>
+  </form>
+
+  @if (error()) {
+    <p class="banner">{{ error() }}</p>
+  }
+
+  <div class="results-panel">
+    <button type="button" class="results-panel__head" (click)="togglePanel()">
+      <span>PERSON - CUSTOMER SEARCH RESULTS</span>
+      <mat-icon>{{ panelOpen() ? 'expand_more' : 'chevron_right' }}</mat-icon>
+    </button>
+
+    @if (panelOpen()) {
+      @if (loading()) {
+        <div class="loading"><mat-spinner diameter="28"></mat-spinner></div>
+      } @else {
+        <div class="table-wrap">
+          <table class="results-table">
+            <thead>
+              <tr>
+                <th>MDM ID</th>
+                <th>PARTY STATUS</th>
+                <th>PARTY LIFECYCLE STATUS</th>
+                <th>PARTY NAME</th>
+                <th>TAX ID TYPE</th>
+                <th>TAX ID VALUE</th>
+                <th>DATE OF BIRTH</th>
+                <th>PHONE</th>
+                <th>EMAIL</th>
+                <th>LEGAL ADDRESS</th>
+                <th>PRIMARY ADDRESS</th>
+                <th>OTHER ADDRESS TYPE(Y/N)</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (row of summaries(); track row.id) {
+                <tr>
+                  <td>
+                    <button class="mdm-link" type="button" (click)="openCustomer(row.id)">
+                      {{ row.mdm_id }}
+                    </button>
+                  </td>
+                  <td>{{ row.party_status }}</td>
+                  <td>{{ row.party_lifecycle_status }}</td>
+                  <td>{{ row.full_name }}</td>
+                  <td>{{ row.tax_id_type }}</td>
+                  <td>{{ row.tax_id }}</td>
+                  <td>{{ row.dob | date: 'MM/dd/yyyy' }}</td>
+                  <td>{{ row.primary_phone || '—' }}</td>
+                  <td>{{ row.primary_email || '—' }}</td>
+                  <td>{{ row.legal_address }}</td>
+                  <td>{{ row.primary_address }}</td>
+                  <td>{{ row.other_address_type }}</td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="12" class="empty">No customers found.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+    }
+  </div>
+</section>

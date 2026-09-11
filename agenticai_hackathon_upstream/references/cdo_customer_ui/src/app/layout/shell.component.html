@@ -1,0 +1,26 @@
+<div class="app-shell">
+  <header class="app-header">
+    <div class="app-header__spacer"></div>
+    <h1 class="app-header__title">CUSTOMER DATA ESSENTIALS</h1>
+    <div class="app-header__right">
+      <button class="linkish" type="button" (click)="createAccount()">New Account</button>
+    </div>
+  </header>
+
+  <nav class="app-subnav">
+    <a
+      routerLink="/customers"
+      routerLinkActive="is-active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      >Customer Search</a
+    >
+    <a routerLink="/customers/new" routerLinkActive="is-active">Create New Account</a>
+    @for (item of customerNav(); track item.path) {
+      <a [routerLink]="item.path" routerLinkActive="is-active">{{ item.label }}</a>
+    }
+  </nav>
+
+  <main class="app-main">
+    <router-outlet />
+  </main>
+</div>

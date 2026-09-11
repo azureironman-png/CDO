@@ -1,0 +1,72 @@
+@use '@angular/material' as mat;
+
+:root {
+  --cdo-orange: #f18a1f;
+  --cdo-orange-deep: #c56a00;
+  --cdo-ink: #222;
+  --cdo-muted: #666;
+  --cdo-surface: #ffffff;
+  --cdo-display: Arial, Helvetica, sans-serif;
+  --cdo-body: Arial, Helvetica, sans-serif;
+  --cdo-mono: 'IBM Plex Mono', Consolas, monospace;
+  --cdo-teal: #f18a1f;
+  --cdo-teal-deep: #c56a00;
+}
+
+$cdo-theme: mat.define-theme(
+  (
+    color: (
+      theme-type: light,
+      primary: mat.$orange-palette,
+      tertiary: mat.$azure-palette
+    ),
+    typography: (
+      plain-family: Arial,
+      brand-family: Arial
+    ),
+    density: (
+      scale: -1
+    )
+  )
+);
+
+html {
+  @include mat.all-component-themes($cdo-theme);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--cdo-body);
+  color: var(--cdo-ink);
+  background: #f2f2f2;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+.mat-mdc-form-field {
+  width: 100%;
+}
+
+.panel .panel__intro h2,
+.section-bar {
+  font-family: Arial, Helvetica, sans-serif;
+}

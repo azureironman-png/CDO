@@ -1,0 +1,74 @@
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f2f2f2;
+}
+
+.app-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 0.85rem;
+  background: #f18a1f;
+  color: #fff;
+}
+
+.app-header__title {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.app-header__right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.linkish {
+  border: 0;
+  background: transparent;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.app-subnav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem;
+  padding: 0.35rem 0.6rem;
+  background: #fff;
+  border-bottom: 1px solid #d7d7d7;
+}
+
+.app-subnav a {
+  padding: 0.35rem 0.7rem;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #333;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+.app-subnav a.is-active,
+.app-subnav a:hover {
+  background: #fff4e5;
+  border-color: #f18a1f;
+  color: #9a4d00;
+}
+
+.app-main {
+  flex: 1;
+  padding: 0.65rem 0.65rem 1.25rem;
+}
